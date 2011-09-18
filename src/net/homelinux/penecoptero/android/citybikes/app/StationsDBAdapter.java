@@ -193,6 +193,9 @@ public class StationsDBAdapter implements Runnable {
 			point = new GeoPoint(lat, lng);
 			Station stat = new Station(id, name, bikes, free, timestamp, mCtx, point);
 			StationOverlay memoryStation = new StationOverlay(stat, getBike);
+			if (center == null){ 
+				center = point;
+			}
 			memoryStation.getStation().setMetersDistance(CircleHelper.gp2m(center, point));
 			memoryStation.getStation().populateStrings();
 			stationsMemoryMap.add(memoryStation);

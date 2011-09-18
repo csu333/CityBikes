@@ -24,7 +24,10 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.GestureDetector.OnGestureListener;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -67,11 +70,9 @@ public class StationOverlay extends Overlay {
 	private float scale;
 	
 	private Station station;
-
+	
 	public StationOverlay(Station station, boolean mode){
-		this.station = station;
-		scale = station.getContext().getResources().getDisplayMetrics().density;
-		this.initPaint();
+		this(station);
 		this.updateStatus(mode);
 	}
 	
@@ -258,5 +259,4 @@ public class StationOverlay extends Overlay {
 		// TODO Auto-generated method stub
 		return super.onTouchEvent(e, mapView);
 	}
-
 }
