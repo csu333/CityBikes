@@ -54,5 +54,5 @@
     <string name="automatic">Automatique</string>
 
     <string name="get_bike_mode">Trouver un vélo</string>
-    <string name="park_bike_mode">Trouver parking</string>
+    <string name="park_bike_mode">Trouver un parking</string>
 </resources>

@@ -36,6 +36,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -71,7 +72,6 @@ public class MainActivity extends MapActivity {
 	public static final int KEY_LNG = 1;
 	public static final int SETTINGS_ACTIVITY = 0;
 	public static final int FAVORITE_ACTIVITY = 0;
-
 	private StationOverlayList stations;
 	private static StationsDBAdapter mDbHelper;
 	private InfoLayer infoLayer;
@@ -81,7 +81,7 @@ public class MainActivity extends MapActivity {
 	private StationSlidingDrawer mSlidingDrawer;
 	private ToggleButton modeButton;
 	
-	private SharedPreferences settings;
+	private static SharedPreferences settings;
 	private NetworksDBAdapter mNDBAdapter;
 
 	private Handler infoLayerPopulator;
@@ -111,9 +111,25 @@ public class MainActivity extends MapActivity {
 				if (msg.what == InfoLayer.POPULATE) {
 					infoLayer.inflateStation(stations.getCurrent());
 				}
+				if (msg.what == CityBikes.BOOKMARK_CHANGE){
+					int id = msg.arg1;
+					int bookmarked = msg.arg2;
+					try {
+						setBookmarkedStation(id, bookmarked == 1);
+						if (!view_all) {
+							view_near();
+						}
+						mapView.postInvalidate();
+						
+					} catch (Exception e){
+						Log.i("CityBikes","EROOOORRL");
+					}
+					
+				}
 			}
 		};
-
+		
+		infoLayer.setHandler(infoLayerPopulator);
 		RelativeLayout.LayoutParams zoomControlsLayoutParams = new RelativeLayout.LayoutParams(
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -679,46 +695,18 @@ public class MainActivity extends MapActivity {
 	public boolean onContextItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_ITEM_ADD_FAVORITE:
-			SharedPreferences settings = getApplicationContext().getSharedPreferences(CityBikes.PREFERENCES_NAME,0);
-			SharedPreferences.Editor editor = settings.edit();
-			JSONArray favorites;
-			try {
-				favorites = new JSONArray(settings.getString("favorites", "[]"));
-				// Insert current station id in incremental order
-				int currentId = stations.getCurrent().getStation().getId();
-				int i = 0;
-				// Find first value larger or equal
-				while (i < favorites.length() && favorites.optInt(i, Integer.MAX_VALUE) < currentId){
-					i++;
-				}
-				// If end of array reached, add currentId
-				if (i >= favorites.length() || favorites.isNull(i)){
-					favorites.put(i, currentId);
-				// Else, shift higher end of array right to insert value, 
-				// if this station isn't in the list yet
-				} else if (favorites.getInt(i) != currentId){
-					int j = favorites.length();
-					while (j > i){
-						// Don't shift if outside array
-						if (!favorites.isNull(j- 1)){
-							favorites.put(j, favorites.get(j - 1));
-						}
-						j--;
-					}
-					favorites.put(i, currentId);
-				}
-				
-				editor.putString("favorites", favorites.toString());
-				editor.commit();
-				
-				// TODO warn the user only if station indeed inserted
-				Toast t = Toast.makeText(getApplicationContext(), "Added favorite: " 
-						+ stations.getCurrent().getStation().getName(), 500);
-				t.show();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			int currentId = stations.getCurrent().getStation().getId();
+			setBookmarkedStation(currentId, true);
+			
+			Toast t = Toast.makeText(getApplicationContext(), "Added favorite: " 
+					+ stations.getCurrent().getStation().getName(), 500);
+			t.show();
+			
+			if (!view_all) {
+				view_near();
 			}
+			mapView.postInvalidate();
+			
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -737,6 +725,33 @@ public class MainActivity extends MapActivity {
 		Boolean dirty = settings.getBoolean("reload_network",false);
 		if (dirty){
 			this.fillData(view_all);	
+		}
+	}
+	
+	public static void setBookmarkedStation(int stationId, boolean bookmarked){
+		String network_url = settings.getString("network_url", "");
+		try {
+			JSONArray stationsBookmarked = new JSONArray(settings.getString(network_url+"_bookmarks","[]"));
+			SharedPreferences.Editor editor = settings.edit();
+			if (bookmarked){
+				stationsBookmarked.put(stationId);
+				Log.i("CityBikes",stationsBookmarked.toString());
+				editor.putString(network_url+"_bookmarks", stationsBookmarked.toString());
+			} else {
+				JSONArray newStations = new JSONArray();
+				for (int i = 0; i < stationsBookmarked.length(); i++){
+					if (stationsBookmarked.getInt(i) == stationId){
+						
+					}else{
+						newStations.put(stationsBookmarked.getInt(i));
+					}
+				}
+				editor.putString(network_url+"_bookmarks", newStations.toString());
+			}
+			editor.commit();
+			mDbHelper.reloadBookmarked();
+		} catch (Exception e){
+			
 		}
 	}
 

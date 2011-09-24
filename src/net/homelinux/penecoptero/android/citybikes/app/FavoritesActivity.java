@@ -2,12 +2,10 @@ package net.homelinux.penecoptero.android.citybikes.app;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -40,10 +38,7 @@ public class FavoritesActivity extends ListActivity {
 	 * showing only those saved a favorites 
 	 */
 	public void fillData(){
-		SharedPreferences settings = getSharedPreferences(CityBikes.PREFERENCES_NAME,0);
-		JSONArray favorites;
 		try {
-			favorites = new JSONArray(settings.getString("favorites", "[]"));
 			ArrayList<StationOverlay> stations = new ArrayList<StationOverlay>();
 			
 			// Browse the stations to find back favorites
@@ -52,16 +47,9 @@ public class FavoritesActivity extends ListActivity {
 			StationsDBAdapter sda = MainActivity.getStationDBAdapter();
 			for (StationOverlay station : sda.getMemory()){
 				Station s = station.getStation();
-				for (int i = 0 ; i < favorites.length() ; i++){
-					int id = favorites.optInt(i, -1);
-					// Some old null references might stay in the array, skip them 
-					if (id == -1){
-						break;
-					}
-					if (s.getId() == id){
-						stations.add(station);
-						break;
-					}
+				if (s.isBookmarked()){
+					s.getId();
+					stations.add(station);
 				}
 			}
 			
@@ -92,7 +80,7 @@ public class FavoritesActivity extends ListActivity {
     	case DELETE_ID:
     		// Removes station from preferences then refresh list
     		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-	        removeFromFavorites(info.id);
+	        MainActivity.setBookmarkedStation((int)info.id, false);
 	        fillData();
 	        return true;
 		}
@@ -134,45 +122,4 @@ public class FavoritesActivity extends ListActivity {
 
 		return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * Removes station with ID stationId from application preferences 
-     * @param stationId
-     */
-	private void removeFromFavorites(long stationId) {
-		SharedPreferences settings = getApplicationContext().getSharedPreferences(
-				CityBikes.PREFERENCES_NAME,0);
-		SharedPreferences.Editor editor = settings.edit();
-		JSONArray favorites;
-		try {
-			favorites = new JSONArray(settings.getString("favorites", "[]"));
-			// Optimization: if only one item left in array, completely trim array
-			if (favorites.isNull(1)){
-				editor.putString("favorites", "[]");
-			} else {
-				// Remove station id
-				int i = 0;
-				// Find value in favorites
-				while (favorites.getInt(i) < stationId){
-					i++;
-				}
-				// Overwrite value by shifting higher end of array left
-				while (i < favorites.length() - 1){
-					favorites.put(i, favorites.get(i + 1));
-					i++;
-				}
-				// This is some weird implementation of Google:
-				// there is no remove() method for JSONArray in Android API
-				// The recommended way if to put null instead but it doesn't
-				// affect the way the array is put into String nor its length
-				favorites.put(i, null);
-				
-				editor.putString("favorites", favorites.toString());
-			}
-			editor.commit();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }
