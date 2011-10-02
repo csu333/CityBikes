@@ -16,7 +16,10 @@
 
 package net.homelinux.penecoptero.android.citybikes.app;
 
+import net.homelinux.penecoptero.android.citybikes.view.FlingTooltip;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -30,8 +33,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -55,6 +59,8 @@ public class InfoLayer extends LinearLayout {
 	private TextView ocupation;
 	private TextView distance;
 	private TextView walking_time;
+	
+	private FlingTooltip flingTooltip;
 	private Handler handler;
 	private Drawable oldBackground;
 	private ViewFlipper vf;
@@ -72,6 +78,8 @@ public class InfoLayer extends LinearLayout {
 	private ToggleButton bookmarkButton;
 
 	private boolean populated = false;
+	
+	private int lastDisplayedChild = -1;
 
 
 	public InfoLayer(Context context, AttributeSet attrs) {
@@ -88,6 +96,26 @@ public class InfoLayer extends LinearLayout {
 
 	public void setHandler(Handler handler) {
 		this.handler = handler;
+	}
+	
+	private void checkFirstTime(){
+		if (isFirstTime()){
+			if (vf!=null && flingTooltip != null){
+				flingTooltip.setVisibility(View.VISIBLE);
+			}
+		}
+	}
+	private boolean isFirstTime(){
+		SharedPreferences settings = ctx.getSharedPreferences(CityBikes.PREFERENCES_NAME,0);
+		boolean firstTime = settings.getBoolean("first_time", true);
+		return firstTime;
+	}
+
+	private void saveFirstTime(){
+		SharedPreferences settings = ctx.getSharedPreferences(CityBikes.PREFERENCES_NAME,0);
+		Editor editor = settings.edit();
+		editor.putBoolean("first_time", false);
+		editor.commit();
 	}
 
 	private void init() {
@@ -148,10 +176,8 @@ public class InfoLayer extends LinearLayout {
 			populated = true;
 			vf = (ViewFlipper) findViewById(R.id.stationViewFlipper);
 			bookmarkButton = (ToggleButton) findViewById(R.id.bookmark_station);
-			if (station.getStation().isBookmarked())
-				Log.i("CityBikes","This station is bookmarked");
-			else
-				Log.i("CityBikes","This station is not bookmarked");
+			flingTooltip = (FlingTooltip) findViewById(R.id.FlingTooltip);
+			flingTooltip.setVisibility(View.INVISIBLE);
 			
 			if (bookmarkButton != null){
 				bookmarkButton.setChecked(station.getStation().isBookmarked());
@@ -172,6 +198,7 @@ public class InfoLayer extends LinearLayout {
 					}});			
 				
 			}
+			checkFirstTime();
 			
 		}
 
@@ -247,7 +274,44 @@ public class InfoLayer extends LinearLayout {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		Log.i("CityBikes", "Touch");
+		if (vf != null && flingTooltip != null){
+			int action = event.getAction();
+			int direction;
+			switch (action) {
+				case MotionEvent.ACTION_DOWN:
+					
+					if (event.getX() > getMeasuredWidth() / 2){
+						direction = 1;
+					} else {
+						direction = 0;
+					}
+					showFlingTooltip(direction);
+					break;
+				case MotionEvent.ACTION_UP:
+					if (lastDisplayedChild == vf.getDisplayedChild()){
+						if (event.getX() > getMeasuredWidth() / 2){
+							direction = 1;
+						} else {
+							direction = 0;
+						}
+					} else {
+						if (event.getX() > getMeasuredWidth() / 2){
+							direction = 0;
+						}else{
+							direction = 1;
+						}
+					}
+					hideFlingTooltip(direction);
+					break;
+				case MotionEvent.ACTION_MOVE:
+					break;
+			}
+			lastDisplayedChild = vf.getDisplayedChild();
+			if (isFirstTime()){
+				saveFirstTime();
+			}
+		}
+		
 		return true;
 	}
 
@@ -294,6 +358,66 @@ public class InfoLayer extends LinearLayout {
 		outtoRight.setInterpolator(new AccelerateInterpolator());
 		return outtoRight;
 	}
+	
+	public void showFlingTooltip (int direction){
+		
+		Animation fadeInAnimation = AnimationUtils.loadAnimation(ctx, android.R.anim.fade_in);
+		fadeInAnimation.setDuration(500);
+		fadeInAnimation.setAnimationListener(new AnimationListener(){
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				flingTooltip.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		flingTooltip.setDirection(direction);
+		flingTooltip.setVisibility(View.VISIBLE);
+		flingTooltip.startAnimation(fadeInAnimation);
+
+	}
+	
+	public void hideFlingTooltip (int direction) {
+		Animation fadeOutAnimation = AnimationUtils.loadAnimation(ctx, android.R.anim.fade_out);
+		fadeOutAnimation.setDuration(500);
+		fadeOutAnimation.setAnimationListener(new AnimationListener(){
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				flingTooltip.setVisibility(View.INVISIBLE);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		flingTooltip.setDirection(direction);
+		flingTooltip.startAnimation(fadeOutAnimation);
+		
+	}
 
 	class MyGestureDetector extends SimpleOnGestureListener {
 		@Override
@@ -307,7 +431,6 @@ public class InfoLayer extends LinearLayout {
 				// right to left swipe
 				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
 						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					Log.i("CityBikes", "Right to Left");
 					// Do thingy!!!!
 
 					vf.setInAnimation(inFromRightAnimation());
@@ -316,7 +439,6 @@ public class InfoLayer extends LinearLayout {
 
 				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
 						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					Log.i("CityBikes", "Left to Right");
 
 					vf.setInAnimation(inFromLeftAnimation());
 					vf.setOutAnimation(outToRightAnimation());

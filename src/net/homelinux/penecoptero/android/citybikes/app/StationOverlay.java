@@ -67,9 +67,11 @@ public class StationOverlay extends Overlay {
 	private float scale;
 	
 	private Station station;
-	
+
 	public StationOverlay(Station station, boolean mode){
-		this(station);
+		this.station = station;
+		scale = station.getContext().getResources().getDisplayMetrics().density;
+		this.initPaint();
 		this.updateStatus(mode);
 	}
 	
@@ -135,7 +137,7 @@ public class StationOverlay extends Overlay {
 			} else if (station.getFree() > RED_STATE_MAX) {
 				this.status = YELLOW_STATE;
 				this.radiusInMeters = YELLOW_STATE_RADIUS;
-				this.currentPaint.setARGB(85, 255, 210, 72);
+				this.currentPaint.setARGB(85, 251,184,41);
 				this.currentBorderPaint.setARGB(100, 255, 210, 72);
 
 			} else {
@@ -157,7 +159,7 @@ public class StationOverlay extends Overlay {
 		} else if (station.getBikes() > RED_STATE_MAX) {
 			this.status = YELLOW_STATE;
 			this.radiusInMeters = YELLOW_STATE_RADIUS;
-			this.currentPaint.setARGB(85, 255, 210, 72);
+			this.currentPaint.setARGB(85, 251,184,41);
 			this.currentBorderPaint.setARGB(100, 255, 210, 72);
 
 		} else {
@@ -284,4 +286,5 @@ public class StationOverlay extends Overlay {
 		// TODO Auto-generated method stub
 		return super.onTouchEvent(e, mapView);
 	}
+
 }

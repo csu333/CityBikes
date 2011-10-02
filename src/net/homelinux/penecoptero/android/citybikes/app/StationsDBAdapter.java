@@ -57,8 +57,6 @@ public class StationsDBAdapter implements Runnable {
 	private StationOverlayList stationsDisplayList;
 
 	private List<StationOverlay> stationsMemoryMap;
-	
-	private JSONArray stationsBookmarked;
 
 	private RESTHelper mRESTHelper;
 
@@ -131,6 +129,7 @@ public class StationsDBAdapter implements Runnable {
 		int lat, lng, bikes, free, id;
 		String timestamp, name;
 		GeoPoint point;
+		BookmarkManager bm = new BookmarkManager(mCtx);
 		for (int i = 0; i < stations.length(); i++) {
 			station = stations.getJSONObject(i);
 			id = station.getInt("id");
@@ -143,11 +142,11 @@ public class StationsDBAdapter implements Runnable {
 
 			point = new GeoPoint(lat, lng);
 			Station stat = new Station(id, name, bikes, free, timestamp, mCtx, point);
-			for (int j = 0; j < stationsBookmarked.length(); j++){
-				if (stationsBookmarked.getInt(j) == stat.getId())
-						stat.setBookmarked(true);
-			}
-			StationOverlay memoryStation = new StationOverlay(stat);
+
+			if (bm.isBookmarked(stat))
+				stat.setBookmarked(true);
+			
+			StationOverlay memoryStation = new StationOverlay(stat, getBike);
 			stationsMemoryMap.add(memoryStation);
 		}
 	}
@@ -189,6 +188,7 @@ public class StationsDBAdapter implements Runnable {
 		int lat, lng, bikes, free, id;
 		String timestamp, name;
 		GeoPoint point;
+		BookmarkManager bm = new BookmarkManager(mCtx);
 		for (int i = 0; i < stations.length(); i++) {
 			station = stations.getJSONObject(i);
 			id = station.getInt("id");
@@ -200,14 +200,11 @@ public class StationsDBAdapter implements Runnable {
 			timestamp = station.getString("timestamp");
 			point = new GeoPoint(lat, lng);
 			Station stat = new Station(id, name, bikes, free, timestamp, mCtx, point);
-			if (center == null){ 
-				center = point;
-			}
-			for (int j = 0; j < stationsBookmarked.length(); j++){
-				if (stationsBookmarked.getInt(j) == stat.getId())
-						stat.setBookmarked(true);
-			}
-			StationOverlay memoryStation = new StationOverlay(stat);
+
+			if (bm.isBookmarked(stat))
+				stat.setBookmarked(true);
+			StationOverlay memoryStation = new StationOverlay(stat, getBike);
+
 			memoryStation.getStation().setMetersDistance(CircleHelper.gp2m(center, point));
 			memoryStation.getStation().populateStrings();
 			stationsMemoryMap.add(memoryStation);
@@ -234,7 +231,6 @@ public class StationsDBAdapter implements Runnable {
 				}
 			}
 		});
-		////Log.i("openBicing", "Building Memory with distances and order...");
 	}
 
 	public void reorder() {
@@ -270,15 +266,6 @@ public class StationsDBAdapter implements Runnable {
 		editor.putLong("last_updated_time",this.last_updated_time);
 		editor.commit();
 	}
-	
-	public void reloadBookmarked() throws Exception {
-		SharedPreferences settings = this.mCtx.getSharedPreferences(PREF_NAME,
-				0);
-		String network_url = settings.getString("network_url", "");
-		stationsBookmarked = new JSONArray(settings.getString(network_url+"_bookmarks","[]"));
-		Log.i("CityBikes",stationsBookmarked.toString());
-		
-	}
 
 	public void retrieve() throws Exception {
 		SharedPreferences settings = this.mCtx.getSharedPreferences(PREF_NAME,
@@ -287,8 +274,6 @@ public class StationsDBAdapter implements Runnable {
 		last_updated = settings.getString("last_updated", null);
 		last_updated_time = settings.getLong("last_updated_time", 0);
 		String network_url = settings.getString("network_url", "");
-		stationsBookmarked = new JSONArray(settings.getString(network_url+"_bookmarks","[]"));
-		Log.i("CityBikes", stationsBookmarked.toString());
 	}
 
 	public void sync(boolean all, Bundle data) throws Exception {

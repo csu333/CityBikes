@@ -37,13 +37,11 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.LinearLayout.LayoutParams;
@@ -65,23 +63,22 @@ public class MainActivity extends MapActivity {
 	public static final int MENU_ITEM_WHATEVER = Menu.FIRST + 2;
 	public static final int MENU_ITEM_LIST = Menu.FIRST + 3;
 	public static final int MENU_ITEM_SETTINGS = Menu.FIRST + 4;
-	public static final int MENU_ITEM_FAVORITES = Menu.FIRST + 5;
-	public static final int MENU_ITEM_HELP = Menu.FIRST + 6;
-	public static final int MENU_ITEM_ADD_FAVORITE = Menu.FIRST;
+	public static final int MENU_ITEM_HELP = Menu.FIRST + 5;
 	public static final int KEY_LAT = 0;
 	public static final int KEY_LNG = 1;
 	public static final int SETTINGS_ACTIVITY = 0;
-	public static final int FAVORITE_ACTIVITY = 0;
+	
+	
 	private StationOverlayList stations;
-	private static StationsDBAdapter mDbHelper;
+	private StationsDBAdapter mDbHelper;
 	private InfoLayer infoLayer;
 	private boolean view_all = false;
 	private HomeOverlay hOverlay;
-	public static ProgressDialog progressDialog;
+	private ProgressDialog progressDialog;
 	private StationSlidingDrawer mSlidingDrawer;
 	private ToggleButton modeButton;
 	
-	private static SharedPreferences settings;
+	private SharedPreferences settings;
 	private NetworksDBAdapter mNDBAdapter;
 
 	private Handler infoLayerPopulator;
@@ -92,7 +89,8 @@ public class MainActivity extends MapActivity {
 	
 	private int zoom = -1;
 	
-	private Locator locator;	
+	private Locator locator;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -102,7 +100,6 @@ public class MainActivity extends MapActivity {
 		mapView = (MapView) findViewById(R.id.mapview);
 		mSlidingDrawer = (StationSlidingDrawer) findViewById(R.id.drawer);
 		infoLayer = (InfoLayer) findViewById(R.id.info_layer);
-		
 		scale = getResources().getDisplayMetrics().density;
 		//Log.i("CityBikes","ON CREATEEEEEEEEE!!!!!");
 		infoLayerPopulator = new Handler() {
@@ -110,21 +107,29 @@ public class MainActivity extends MapActivity {
 			public void handleMessage(Message msg) {
 				if (msg.what == InfoLayer.POPULATE) {
 					infoLayer.inflateStation(stations.getCurrent());
+					
 				}
 				if (msg.what == CityBikes.BOOKMARK_CHANGE){
 					int id = msg.arg1;
-					int bookmarked = msg.arg2;
-					try {
-						setBookmarkedStation(id, bookmarked == 1);
-						if (!view_all) {
-							view_near();
-						}
-						mapView.postInvalidate();
-						
-					} catch (Exception e){
-						Log.i("CityBikes","EROOOORRL");
+					boolean bookmarked;
+					if (msg.arg2 == 0){
+						bookmarked = false;
+					} else{
+						bookmarked = true;
+					}
+					StationOverlay station = stations.getById(id);
+					try{
+						BookmarkManager bm = new BookmarkManager(getApplicationContext());
+						bm.setBookmarked(station.getStation(), !bookmarked);
+					}catch (Exception e){
+						Log.i("CityBikes","Error bookmarking station");
+						e.printStackTrace();
 					}
 					
+					if (!view_all) {
+						view_near();
+					}
+					mapView.postInvalidate();
 				}
 			}
 		};
@@ -138,7 +143,6 @@ public class MainActivity extends MapActivity {
 		
 		
 		mapView.addView(mapView.getZoomControls(), zoomControlsLayoutParams);
-		registerForContextMenu(mapView);
 		
 		modeButton = (ToggleButton) findViewById(R.id.mode_button);
 		
@@ -325,15 +329,10 @@ public class MainActivity extends MapActivity {
 		        final GestureDetector gd = new GestureDetector(new GestureDetector.SimpleOnGestureListener(){
 		                @Override
 		                public void onLongPress(MotionEvent e) {
-		                	Projection astral = finalMapView.getProjection();
-		                	GeoPoint p = astral.fromPixels((int) e.getX(),(int) e.getY());
-		                	GeoPoint c = stations.getCurrent().getCenter();
-		                	if ((p.getLatitudeE6() <= c.getLatitudeE6() + 800 &&
-		            				p.getLatitudeE6() >= c.getLatitudeE6() - 800)
-		            				&& (p.getLongitudeE6() <= c.getLongitudeE6() + 800 &&
-		            						p.getLongitudeE6() >= c.getLongitudeE6() - 800)) {
-		                		openContextMenu(finalMapView);
-		            		}
+		                        //Log.i("CityBikes","LONG PRESS!");
+		                        Projection astral = finalMapView.getProjection();
+		                        GeoPoint center = astral.fromPixels((int) e.getX(),(int) e.getY());
+		                        locator.lockCenter(center);
 		                }
 
 						@Override
@@ -566,8 +565,6 @@ public class MainActivity extends MapActivity {
 				android.R.drawable.checkbox_off_background);
 		menu.add(0, MENU_ITEM_SETTINGS, 0, R.string.menu_settings).setIcon(
 				android.R.drawable.ic_menu_preferences);
-		menu.add(0, MENU_ITEM_FAVORITES, 0, R.string.menu_favorites).setIcon(
-				android.R.drawable.ic_menu_myplaces);
 		return true;
 	}
 
@@ -636,12 +633,9 @@ public class MainActivity extends MapActivity {
 			view_all = !view_all;
 			return true;
 		case MENU_ITEM_SETTINGS:
-			this.startActivityForResult(new Intent(this,
-				SettingsActivity.class), SETTINGS_ACTIVITY);
-			return true;
-		case MENU_ITEM_FAVORITES:
-			Intent i = new Intent(this, FavoritesActivity.class);
-			this.startActivity(i);
+			this
+					.startActivityForResult(new Intent(this,
+							SettingsActivity.class), SETTINGS_ACTIVITY);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -683,35 +677,6 @@ public class MainActivity extends MapActivity {
 			this.finish();
 
 	}
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, MENU_ITEM_ADD_FAVORITE, 0, R.string.menu_item_add_to_favorites);
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_ITEM_ADD_FAVORITE:
-			int currentId = stations.getCurrent().getStation().getId();
-			setBookmarkedStation(currentId, true);
-			
-			Toast t = Toast.makeText(getApplicationContext(), "Added favorite: " 
-					+ stations.getCurrent().getStation().getName(), 500);
-			t.show();
-			
-			if (!view_all) {
-				view_near();
-			}
-			mapView.postInvalidate();
-			
-			return true;
-		default:
-			return super.onContextItemSelected(item);
-		}
-	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -725,33 +690,6 @@ public class MainActivity extends MapActivity {
 		Boolean dirty = settings.getBoolean("reload_network",false);
 		if (dirty){
 			this.fillData(view_all);	
-		}
-	}
-	
-	public static void setBookmarkedStation(int stationId, boolean bookmarked){
-		String network_url = settings.getString("network_url", "");
-		try {
-			JSONArray stationsBookmarked = new JSONArray(settings.getString(network_url+"_bookmarks","[]"));
-			SharedPreferences.Editor editor = settings.edit();
-			if (bookmarked){
-				stationsBookmarked.put(stationId);
-				Log.i("CityBikes",stationsBookmarked.toString());
-				editor.putString(network_url+"_bookmarks", stationsBookmarked.toString());
-			} else {
-				JSONArray newStations = new JSONArray();
-				for (int i = 0; i < stationsBookmarked.length(); i++){
-					if (stationsBookmarked.getInt(i) == stationId){
-						
-					}else{
-						newStations.put(stationsBookmarked.getInt(i));
-					}
-				}
-				editor.putString(network_url+"_bookmarks", newStations.toString());
-			}
-			editor.commit();
-			mDbHelper.reloadBookmarked();
-		} catch (Exception e){
-			
 		}
 	}
 
@@ -779,9 +717,5 @@ public class MainActivity extends MapActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static StationsDBAdapter getStationDBAdapter(){
-		return mDbHelper;
 	}
 }
