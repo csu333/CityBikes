@@ -21,11 +21,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
+//import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
@@ -62,7 +61,6 @@ public class InfoLayer extends LinearLayout {
 	
 	private FlingTooltip flingTooltip;
 	private Handler handler;
-	private Drawable oldBackground;
 	private ViewFlipper vf;
 
 	private LayoutInflater inflater;

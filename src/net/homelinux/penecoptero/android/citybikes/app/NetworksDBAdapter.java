@@ -12,7 +12,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
-import android.util.Log;
+//import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 

@@ -52,7 +52,7 @@ public class StationSlidingDrawer extends SlidingDrawer {
 	
 	public static final int ITEMCLICKED = 200;
 	
-	private ArrayAdapter <List <StationOverlay> > adapter;
+	private StationsAdapter adapter;
 	
 	private Context context;
 	
@@ -144,8 +144,7 @@ public class StationSlidingDrawer extends SlidingDrawer {
 		handler = h;
 	}
 	
-	private class StationsAdapter extends ArrayAdapter {
-		@SuppressWarnings("unchecked")
+	private class StationsAdapter extends ArrayAdapter<StationOverlay> {
 		public StationsAdapter(Context context, int textViewResourceId,
 				List <StationOverlay> objects) {
 			super(context, textViewResourceId, objects);

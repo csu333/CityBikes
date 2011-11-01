@@ -34,10 +34,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+//import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
 
 public class StationsDBAdapter implements Runnable {
 	public static final String CENTER_LAT_KEY = "sCenterLat";
@@ -89,13 +90,13 @@ public class StationsDBAdapter implements Runnable {
 		
 		this.mRESTHelper = new RESTHelper(false, null, null);
 
-		this.toDo = new LinkedList();
+		this.toDo = new LinkedList<Integer>();
 	}
 
 	public StationsDBAdapter(Context ctx, Handler handler) {
 		this.mRESTHelper = new RESTHelper(false, null, null);
 		this.handlerOut = handler;
-		this.toDo = new LinkedList();
+		this.toDo = new LinkedList<Integer>();
 		this.mCtx = ctx;
 	}
 
@@ -210,12 +211,12 @@ public class StationsDBAdapter implements Runnable {
 			stationsMemoryMap.add(memoryStation);
 		}
 
-		Collections.sort(stationsMemoryMap, new Comparator() {
-			public int compare(Object o1, Object o2) {
+		Collections.sort(stationsMemoryMap, new Comparator<Overlay>() {
+			public int compare(final Overlay o1, final Overlay o2) {
 				if (o1 instanceof StationOverlay
 						&& o2 instanceof StationOverlay) {
-					StationOverlay stat1 = (StationOverlay) o1;
-					StationOverlay stat2 = (StationOverlay) o2;
+					final StationOverlay stat1 = (StationOverlay) o1;
+					final StationOverlay stat2 = (StationOverlay) o2;
 					if (stat1.getStation().getMetersDistance() > stat2.getStation().getMetersDistance())
 						return 1;
 					else
@@ -234,8 +235,8 @@ public class StationsDBAdapter implements Runnable {
 	}
 
 	public void reorder() {
-		Collections.sort(stationsMemoryMap, new Comparator() {
-			public int compare(Object o1, Object o2) {
+		Collections.sort(stationsMemoryMap, new Comparator<Overlay>() {
+			public int compare(Overlay o1, Overlay o2) {
 				if (o1 instanceof StationOverlay
 						&& o2 instanceof StationOverlay) {
 					StationOverlay stat1 = (StationOverlay) o1;
@@ -273,6 +274,7 @@ public class StationsDBAdapter implements Runnable {
 		RAWstations = settings.getString("stations", "[]");
 		last_updated = settings.getString("last_updated", null);
 		last_updated_time = settings.getLong("last_updated_time", 0);
+		@SuppressWarnings("unused")
 		String network_url = settings.getString("network_url", "");
 	}
 
@@ -316,7 +318,7 @@ public class StationsDBAdapter implements Runnable {
 
 	public void changeMode (boolean getBike){
 		this.getBike = getBike;
-		Iterator i = stationsMemoryMap.iterator();
+		Iterator<StationOverlay> i = stationsMemoryMap.iterator();
 		while (i.hasNext()){
 			Object tmp = i.next();
 			if ( tmp instanceof StationOverlay){

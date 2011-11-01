@@ -45,8 +45,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 
-import android.content.Context;
-
 public class RESTHelper {
 
 	private final String USERNAME;

@@ -1,13 +1,14 @@
 package net.homelinux.penecoptero.android.citybikes.app;
 
 import android.content.Context;
-import android.util.Log;
+//import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 
 public class Station {
 	private int bikes;
 	private int free;
+	@SuppressWarnings("unused")
 	private String timestamp;
 	private String name;
 	private int id;

@@ -75,7 +75,7 @@ public class StationOverlayList {
 	}
 	
 	public StationOverlay getById (int id){
-		Iterator i = mapOverlays.iterator();
+		Iterator<Overlay> i = mapOverlays.iterator();
 		StationOverlay tmp;
 		Object aws;
 		while (i.hasNext()) {
