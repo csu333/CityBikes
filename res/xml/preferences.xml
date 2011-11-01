@@ -37,6 +37,11 @@
             android:summary="@string/preferences_network_summary">
         	</PreferenceScreen>
         	<PreferenceScreen
+            android:key="citybikes.preference_account_info"
+            android:title="@string/preference_account_info"
+            android:summary="@string/preference_account_info_summary">
+        	</PreferenceScreen>
+        	<PreferenceScreen
             android:key="citybikes.preferences_cache_network"
             android:title="@string/preferences_cache_network_title"
             android:summary="@string/preferences_cache_network_summary">

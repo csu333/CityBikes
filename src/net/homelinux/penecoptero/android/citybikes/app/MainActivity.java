@@ -21,7 +21,6 @@ import java.util.List;
 
 import net.homelinux.penecoptero.android.citybikes.utils.CircleHelper;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,7 +62,8 @@ public class MainActivity extends MapActivity {
 	public static final int MENU_ITEM_WHATEVER = Menu.FIRST + 2;
 	public static final int MENU_ITEM_LIST = Menu.FIRST + 3;
 	public static final int MENU_ITEM_SETTINGS = Menu.FIRST + 4;
-	public static final int MENU_ITEM_HELP = Menu.FIRST + 5;
+	public static final int MENU_ITEM_MY_ACCOUNT = Menu.FIRST + 5;
+	public static final int MENU_ITEM_HELP = Menu.FIRST + 6;
 	public static final int KEY_LAT = 0;
 	public static final int KEY_LNG = 1;
 	public static final int SETTINGS_ACTIVITY = 0;
@@ -565,6 +565,8 @@ public class MainActivity extends MapActivity {
 				android.R.drawable.checkbox_off_background);
 		menu.add(0, MENU_ITEM_SETTINGS, 0, R.string.menu_settings).setIcon(
 				android.R.drawable.ic_menu_preferences);
+		menu.add(0, MENU_ITEM_MY_ACCOUNT, 0, R.string.menu_my_account).setIcon(
+				android.R.drawable.ic_menu_recent_history);
 		return true;
 	}
 
@@ -637,7 +639,13 @@ public class MainActivity extends MapActivity {
 					.startActivityForResult(new Intent(this,
 							SettingsActivity.class), SETTINGS_ACTIVITY);
 			return true;
+		case MENU_ITEM_MY_ACCOUNT:
+			this
+					.startActivity(new Intent(this,
+							AccountActivity.class));
+			return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -695,7 +703,7 @@ public class MainActivity extends MapActivity {
 
 	public void populateList(boolean all) {
 		try {
-			List sts;
+			List<StationOverlay> sts;
 			if (all) {
 				sts = mDbHelper.getMemory();
 			} else {

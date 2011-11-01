@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout android:id="@+id/TableLayout1"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" 
+	android:weightSum="1"
+    android:stretchColumns="1"
+    android:shrinkColumns="1">
+    <TextView 
+    	android:layout_height="wrap_content" 
+    	android:layout_width="wrap_content" 
+    	android:text="@string/label_my_account" 
+    	android:id="@+id/label_account_info" 
+    	android:textSize="18sp"/>
+    <ImageView
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:src="@android:drawable/divider_horizontal_dark"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:scaleType="fitXY"
+	    android:paddingLeft="5dp"
+	    android:paddingRight="5dp"
+	    android:paddingBottom="2dp"
+	    android:paddingTop="2dp" />
+	<TableRow>
+		<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content"
+	    	android:padding="3dip" 
+	    	android:text="@string/label_firstname" 
+	    	android:id="@+id/label_firstname" />
+	   	<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content" 
+	    	android:padding="3dip"
+	    	android:id="@+id/firstname" />
+    </TableRow>
+    <TableRow>
+		<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content"
+	    	android:padding="3dip" 
+	    	android:text="@string/label_lastname" 
+	    	android:id="@+id/label_lastname" />
+	   	<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content" 
+	    	android:padding="3dip"
+	    	android:id="@+id/lastname" />
+    </TableRow>
+    <TableRow>
+		<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content"
+	    	android:padding="3dip" 
+	    	android:text="@string/label_account_validity" 
+	    	android:id="@+id/label_account_validity" />
+	   	<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content" 
+	    	android:padding="3dip"
+	    	android:id="@+id/account_validity" />
+    </TableRow>
+    <TableRow>
+		<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content"
+	    	android:padding="3dip" 
+	    	android:text="@string/label_account_state" 
+	    	android:id="@+id/label_account_state" />
+	   	<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content" 
+	    	android:padding="3dip"
+	    	android:id="@+id/account_state" />
+    </TableRow>
+    <TextView 
+    	android:layout_height="wrap_content" 
+    	android:layout_width="wrap_content" 
+    	android:padding="3dip"
+    	android:text="@string/label_trip" 
+    	android:id="@+id/label_trip" 
+    	android:textSize="18sp"
+    	android:paddingTop="10dip" />
+	<ImageView
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:src="@android:drawable/divider_horizontal_dark"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:scaleType="fitXY"
+	    android:paddingLeft="5dp"
+	    android:paddingRight="5dp"
+	    android:paddingBottom="2dp"
+	    android:paddingTop="2dp" />
+	<TableRow>
+		<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content"
+	    	android:padding="3dip" 
+	    	android:text="@string/label_in_trip" 
+	    	android:id="@+id/label_in_trip" />
+	   	<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content" 
+	    	android:padding="3dip"
+	    	android:id="@+id/in_trip" />
+    </TableRow>
+	<TableRow>
+		<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content"
+	    	android:padding="3dip" 
+	    	android:text="@string/label_last_trip_date" 
+	    	android:id="@+id/label_last_trip_date" />
+	   	<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content" 
+	    	android:padding="3dip"
+	    	android:id="@+id/last_trip_date" />
+    </TableRow>
+    <TableRow>
+		<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content"
+	    	android:padding="3dip" 
+	    	android:text="@string/label_last_trip_duration" 
+	    	android:id="@+id/label_last_trip_duration" />
+	   	<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content" 
+	    	android:padding="3dip"
+	    	android:id="@+id/last_trip_duration" />
+    </TableRow>
+    <TableRow>
+		<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content"
+	    	android:padding="3dip" 
+	    	android:text="@string/label_last_trip_amount" 
+	    	android:id="@+id/label_last_trip_amount" />
+	   	<TextView 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="wrap_content" 
+	    	android:padding="3dip"
+	    	android:id="@+id/last_trip_amount" />
+    </TableRow>
+    
+    <!-- Left for debugging purposes -->
+    <EditText android:id="@+id/editText" 
+    	android:layout_width="wrap_content" 
+    	android:inputType="textMultiLine" 
+    	android:layout_weight="0.50" 
+    	android:layout_height="fill_parent"
+    	android:visibility="gone">
+    </EditText>
+    
+</TableLayout>

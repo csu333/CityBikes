@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+    <TextView android:text="@string/label_subscriber_city" 
+    	android:id="@+id/label_subscriber_city" 
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content" />
+    <Spinner android:layout_width="fill_parent" 
+    	android:layout_height="wrap_content" 
+    	android:id="@+id/city" />
+    	
+    <TextView android:text="@string/label_subscriber_id" 
+    	android:id="@+id/label_subscriber_id" 
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content" />
+    <EditText android:id="@+id/subscriber_id" 
+    	android:layout_width="fill_parent" 
+    	android:layout_height="wrap_content" 
+    	android:inputType="number" />
+    	
+    <TextView android:text="@string/label_subscriber_name" 
+    	android:id="@+id/label_subscriber_name" 
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content" />
+    <EditText android:id="@+id/subscriber_name" 
+    	android:layout_width="fill_parent" 
+    	android:layout_height="wrap_content" />
+    	
+    <TextView android:text="@string/label_subscriber_pin" 
+    	android:id="@+id/label_subscriber_pin" 
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content" />
+    <EditText android:id="@+id/subscriber_pin" 
+    	android:layout_width="fill_parent" 
+    	android:layout_height="wrap_content" 
+    	android:inputType="textPassword"/>
+    
+</LinearLayout>

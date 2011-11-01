@@ -20,6 +20,7 @@
     <string name="menu_location">Ma position</string>
     <string name="menu_view_all">Tout voir</string>
     <string name="menu_settings">Réglages</string>
+    <string name="menu_my_account">Mon compte</string>
     <string name="menu_help">Aide</string>
     <string name="no_bikes_around">Il n\'y a pas de vélos autour de vous. Vous devriez essayer de redimensionner le périmètre en glissant le point bleu ou en cochant \"Tout voir\" dans le menu</string>
     <string name="bikes">vélos</string>
@@ -36,6 +37,8 @@
 	<string name="preferences_cache_network_summary">Restaure l\'état de l\'application comme si elle venait d\'être installée (conserve les favorits)</string>
     <string name="preferences_autofind_network_title">Sélection automatique du réseau</string>
     <string name="preferences_autofind_network_summary">Autoriser la sélection automatique du réseau en fonction de votre position</string>
+    <string name="preference_account_info">Information du compte</string>
+    <string name="preference_account_info_summary">Configurer votre compte pour récupérer des informations</string>
 
 
     <string name="bike_network_alert_title">Sélection du réseau de vélos</string>
@@ -52,4 +55,19 @@
     <string name="automatic">Automatique</string>
     <string name="get_bike_mode">Trouver un vélo</string>
     <string name="park_bike_mode">Trouver un parking</string>
+    
+    <string name="label_subscriber_city">Ville</string>
+    <string name="label_subscriber_id">N\u00b0 d\'abonné</string>
+    <string name="label_subscriber_name">Nom de famille</string>
+    <string name="label_my_account">Mon compte</string>
+    <string name="label_firstname">Prénom:</string>
+    <string name="label_lastname">Nom:</string>
+    <string name="label_account_validity">Validité du compte:</string>
+    <string name="label_account_state">Solde:</string>
+    <string name="label_trip">Trajet</string>
+    <string name="label_in_trip">En trajet: </string>
+    <string name="label_last_trip_date">Dernier trajet:</string>
+    <string name="label_last_trip_duration">Durée:</string>
+    <string name="label_last_trip_amount">Coût:</string>
+    <string name="days_to_go">%1$s (encore %2$d jours)</string>
 </resources>
