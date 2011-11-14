@@ -36,7 +36,7 @@ public class AccountHelper {
 
 	public static final String SERVER_URL = "https://gw.cyclocity.fr/3311a6cea2e49b10";
 	
-	private static RESTHelper mRESTHelper;				// Handles http requests
+	private static RESTHelper mRESTHelper;						// Handles http requests
 	private String token = null; 						// Stores identification token
 	private Date expiryDate = new Date(Long.MAX_VALUE);	// The token have a expiry date
 	
@@ -64,7 +64,7 @@ public class AccountHelper {
 
 	private String getUrl(String url) {
 		// Check if token is still valid
-		if (token == null || expiryDate.after(new Date(System.currentTimeMillis()))){
+		if (token == null || expiryDate.before(new Date(System.currentTimeMillis()))){
 			try {
 				// Get token
 				JSONObject response = new JSONObject(

@@ -100,11 +100,11 @@
 	    	android:padding="3dip" 
 	    	android:text="@string/label_in_trip" 
 	    	android:id="@+id/label_in_trip" />
-	   	<TextView 
-	    	android:layout_height="wrap_content" 
-	    	android:layout_width="wrap_content" 
-	    	android:padding="3dip"
-	    	android:id="@+id/in_trip" />
+		<ImageView 
+			android:layout_width="wrap_content" 
+			android:layout_height="fill_parent"
+			android:scaleType="fitStart"
+			android:id="@+id/in_trip" />
     </TableRow>
 	<TableRow>
 		<TextView 
