@@ -229,13 +229,13 @@ public class MainActivity extends MapActivity {
 					SharedPreferences.Editor editor = settings.edit();
 					editor.putBoolean("reload_network", false);
 					editor.commit();
+				case StationsDBAdapter.UPDATE_DATABASE:
 					StationOverlay current = stations.getCurrent();
 					if (current == null) {
 						infoLayer
 								.inflateMessage(getString(R.string.no_bikes_around));
 					}
 					if (current != null) {
-						current.setSelected(true,getBike);
 						infoLayer.inflateStation(current);
 						if (view_all)
 							view_all();
@@ -245,9 +245,7 @@ public class MainActivity extends MapActivity {
 						
 					}
 					mapView.invalidate();
-					break;
-				case StationsDBAdapter.UPDATE_DATABASE:
-					
+					infoLayer.update();
 					////Log.i("openBicing", "Database updated");
 					break;
 				case StationsDBAdapter.NETWORK_ERROR:
@@ -528,6 +526,7 @@ public class MainActivity extends MapActivity {
 				toast.show();
 			}
 		}
+		infoLayer.update();
 	}
 	
 	public void changeMode(boolean getBike){

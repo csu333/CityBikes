@@ -344,12 +344,14 @@ public class StationsDBAdapter implements Runnable {
 					last_updated = sdf.format(cal.getTime());
 					last_updated_time = cal.getTime().getTime();
 					buildMemory(new JSONArray(RAWstations), this.center);
+					stationsDisplayList.invalidate();
 				} catch (Exception fetchError) {
 					handlerOut.sendEmptyMessage(NETWORK_ERROR);
 					fetchError.printStackTrace();
 					try {
 						retrieve();
 						buildMemory(new JSONArray(RAWstations), this.center);
+						stationsDisplayList.invalidate();
 					} catch (Exception internalError) {
 						// FUCK EVERYTHING!
 					}

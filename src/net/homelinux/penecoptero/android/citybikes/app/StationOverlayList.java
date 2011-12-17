@@ -100,4 +100,10 @@ public class StationOverlayList {
 	public StationOverlay getCurrent(){
 		return current;
 	}
+	
+	public void invalidate(){
+		if (current != null){
+			current = getById(current.getStation().getId());
+		}
+	}
 }
