@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package net.homelinux.penecoptero.android.citybikes.app;
+package net.homelinux.penecoptero.android.citybikes.donation.app;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import net.homelinux.penecoptero.android.citybikes.donation.app.StationOverlay;
 
 import android.os.Handler;
 
@@ -77,7 +75,7 @@ public class StationOverlayList {
 	}
 	
 	public StationOverlay getById (int id){
-		Iterator<Overlay> i = mapOverlays.iterator();
+		Iterator i = mapOverlays.iterator();
 		StationOverlay tmp;
 		Object aws;
 		while (i.hasNext()) {
@@ -101,11 +99,5 @@ public class StationOverlayList {
 	
 	public StationOverlay getCurrent(){
 		return current;
-	}
-	
-	public void invalidate(){
-		if (current != null){
-			current = getById(current.getStation().getId());
-		}
 	}
 }

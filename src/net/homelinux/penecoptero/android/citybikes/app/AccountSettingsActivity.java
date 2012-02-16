@@ -2,6 +2,9 @@ package net.homelinux.penecoptero.android.citybikes.app;
 
 import java.util.Map;
 
+import net.homelinux.penecoptero.android.citybikes.donation.app.CityBikes;
+import net.homelinux.penecoptero.android.citybikes.donation.app.R;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;

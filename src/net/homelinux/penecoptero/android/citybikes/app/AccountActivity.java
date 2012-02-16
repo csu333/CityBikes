@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import net.homelinux.penecoptero.android.citybikes.donation.app.CityBikes;
+import net.homelinux.penecoptero.android.citybikes.donation.app.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

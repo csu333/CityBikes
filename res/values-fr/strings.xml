@@ -45,14 +45,14 @@
     <string name="bike_network_alert_text">Je peux trouver un réseau de vélos pour vous sur base de votre position.\nOu vous pouvez le sélectionner manuellement depuis une liste.\nQuel est votre choix?</string>
  
     <string name="bike_network_alert_error_title">Pas de réseau trouvé</string>
-    <string name="bike_network_alert_error_text">Ré-essayez ou sélectionnez manuellement depuis une liste</string>
     <string name="try_again">Ré-essayer</string>
-    <string name="manual">Manuel</string>
+
     <string name="bike_network_alert_success_title">Réseau trouvé</string>
     <string name="bike_network_alert_success_text1">Est-ce correct?</string>
     <string name="bike_network_alert_success_text0">J\'ai détecté</string>
     <string name="sure">Oui</string>
     <string name="automatic">Automatique</string>
+
     <string name="get_bike_mode">Trouver un vélo</string>
     <string name="park_bike_mode">Trouver un parking</string>
     
@@ -70,4 +70,9 @@
     <string name="label_last_trip_duration">Durée:</string>
     <string name="label_last_trip_amount">Coût:</string>
     <string name="days_to_go">%1$s (encore %2$d jours)</string>
+
+    <string name="manual">Manuel</string>
+    <string name="bike_network_alert_error_text">Ré-essayez ou sélectionnez manuellement depuis une liste</string>
+        <string name="fling_tooltip">Slide through the green arrow to reveal the bookmarks menu</string>
+    
 </resources>

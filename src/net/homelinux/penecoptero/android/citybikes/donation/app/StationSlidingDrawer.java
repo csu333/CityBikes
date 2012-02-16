@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package net.homelinux.penecoptero.android.citybikes.app;
+package net.homelinux.penecoptero.android.citybikes.donation.app;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import net.homelinux.penecoptero.android.citybikes.donation.app.R;
-import net.homelinux.penecoptero.android.citybikes.donation.app.StationOverlay;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -55,7 +52,7 @@ public class StationSlidingDrawer extends SlidingDrawer {
 	
 	public static final int ITEMCLICKED = 200;
 	
-	private StationsAdapter adapter;
+	private ArrayAdapter <List <StationOverlay> > adapter;
 	
 	private Context context;
 	
@@ -147,7 +144,8 @@ public class StationSlidingDrawer extends SlidingDrawer {
 		handler = h;
 	}
 	
-	private class StationsAdapter extends ArrayAdapter<StationOverlay> {
+	private class StationsAdapter extends ArrayAdapter {
+		@SuppressWarnings("unchecked")
 		public StationsAdapter(Context context, int textViewResourceId,
 				List <StationOverlay> objects) {
 			super(context, textViewResourceId, objects);

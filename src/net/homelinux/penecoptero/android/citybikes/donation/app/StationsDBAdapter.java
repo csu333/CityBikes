@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.homelinux.penecoptero.android.citybikes.app;
+package net.homelinux.penecoptero.android.citybikes.donation.app;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,10 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import net.homelinux.penecoptero.android.citybikes.donation.app.BookmarkManager;
-import net.homelinux.penecoptero.android.citybikes.donation.app.HomeOverlay;
-import net.homelinux.penecoptero.android.citybikes.donation.app.StationOverlay;
-import net.homelinux.penecoptero.android.citybikes.donation.app.Station;
 import net.homelinux.penecoptero.android.citybikes.utils.CircleHelper;
 
 import org.json.JSONArray;
@@ -38,11 +34,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-//import android.util.Log;
+import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
 
 public class StationsDBAdapter implements Runnable {
 	public static final String CENTER_LAT_KEY = "sCenterLat";
@@ -94,13 +89,13 @@ public class StationsDBAdapter implements Runnable {
 		
 		this.mRESTHelper = new RESTHelper(false, null, null);
 
-		this.toDo = new LinkedList<Integer>();
+		this.toDo = new LinkedList();
 	}
 
 	public StationsDBAdapter(Context ctx, Handler handler) {
 		this.mRESTHelper = new RESTHelper(false, null, null);
 		this.handlerOut = handler;
-		this.toDo = new LinkedList<Integer>();
+		this.toDo = new LinkedList();
 		this.mCtx = ctx;
 	}
 
@@ -215,12 +210,12 @@ public class StationsDBAdapter implements Runnable {
 			stationsMemoryMap.add(memoryStation);
 		}
 
-		Collections.sort(stationsMemoryMap, new Comparator<Overlay>() {
-			public int compare(final Overlay o1, final Overlay o2) {
+		Collections.sort(stationsMemoryMap, new Comparator() {
+			public int compare(Object o1, Object o2) {
 				if (o1 instanceof StationOverlay
 						&& o2 instanceof StationOverlay) {
-					final StationOverlay stat1 = (StationOverlay) o1;
-					final StationOverlay stat2 = (StationOverlay) o2;
+					StationOverlay stat1 = (StationOverlay) o1;
+					StationOverlay stat2 = (StationOverlay) o2;
 					if (stat1.getStation().getMetersDistance() > stat2.getStation().getMetersDistance())
 						return 1;
 					else
@@ -239,8 +234,8 @@ public class StationsDBAdapter implements Runnable {
 	}
 
 	public void reorder() {
-		Collections.sort(stationsMemoryMap, new Comparator<Overlay>() {
-			public int compare(Overlay o1, Overlay o2) {
+		Collections.sort(stationsMemoryMap, new Comparator() {
+			public int compare(Object o1, Object o2) {
 				if (o1 instanceof StationOverlay
 						&& o2 instanceof StationOverlay) {
 					StationOverlay stat1 = (StationOverlay) o1;
@@ -278,7 +273,6 @@ public class StationsDBAdapter implements Runnable {
 		RAWstations = settings.getString("stations", "[]");
 		last_updated = settings.getString("last_updated", null);
 		last_updated_time = settings.getLong("last_updated_time", 0);
-		@SuppressWarnings("unused")
 		String network_url = settings.getString("network_url", "");
 	}
 
@@ -322,7 +316,7 @@ public class StationsDBAdapter implements Runnable {
 
 	public void changeMode (boolean getBike){
 		this.getBike = getBike;
-		Iterator<StationOverlay> i = stationsMemoryMap.iterator();
+		Iterator i = stationsMemoryMap.iterator();
 		while (i.hasNext()){
 			Object tmp = i.next();
 			if ( tmp instanceof StationOverlay){
@@ -348,14 +342,12 @@ public class StationsDBAdapter implements Runnable {
 					last_updated = sdf.format(cal.getTime());
 					last_updated_time = cal.getTime().getTime();
 					buildMemory(new JSONArray(RAWstations), this.center);
-					stationsDisplayList.invalidate();
 				} catch (Exception fetchError) {
 					handlerOut.sendEmptyMessage(NETWORK_ERROR);
 					fetchError.printStackTrace();
 					try {
 						retrieve();
 						buildMemory(new JSONArray(RAWstations), this.center);
-						stationsDisplayList.invalidate();
 					} catch (Exception internalError) {
 						// FUCK EVERYTHING!
 					}

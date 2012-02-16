@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package net.homelinux.penecoptero.android.citybikes.app;
+package net.homelinux.penecoptero.android.citybikes.donation.app;
 
-import net.homelinux.penecoptero.android.citybikes.donation.app.BikeNetworkActivity;
-import net.homelinux.penecoptero.android.citybikes.donation.app.CityBikes;
-import net.homelinux.penecoptero.android.citybikes.donation.app.R;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,17 +26,14 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
-//import android.util.Log;
 
 public class SettingsActivity extends PreferenceActivity implements
 		OnPreferenceChangeListener {
 
 	PreferenceScreen psLocation;
 	PreferenceScreen manualNetwork;
-	PreferenceScreen accountInfo;
 	PreferenceScreen clearCache;
 	CheckBoxPreference autoNetwork;
-	@SuppressWarnings("unused")
 	private Context context;
 	
 	@Override
@@ -55,8 +49,6 @@ public class SettingsActivity extends PreferenceActivity implements
 		//autoNetwork = (CheckBoxPreference) this.findPreference("autofind_network");
 		
 		manualNetwork = (PreferenceScreen) this.findPreference("citybikes.preferences_network");
-		
-		accountInfo = (PreferenceScreen) this.findPreference("citybikes.preference_account_info");
 		
 		clearCache = (PreferenceScreen) this.findPreference("citybikes.preferences_cache_network");
 		
@@ -92,16 +84,6 @@ public class SettingsActivity extends PreferenceActivity implements
 			}
 		});
 		
-		accountInfo.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				// TODO Auto-generated method stub
-				launchAccountSettings();
-				return false;
-			}
-		});
-		
 		clearCache.setOnPreferenceClickListener(new OnPreferenceClickListener (){
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -114,9 +96,6 @@ public class SettingsActivity extends PreferenceActivity implements
 				editor.remove("stations");
 				editor.remove("networks");
 				editor.putBoolean("reload_network", true);
-				editor.remove("subscriberNumber");
-				editor.remove("subscriberName");
-				editor.remove("subscriberPIN");
 				editor.commit();
 				return false;
 			}
@@ -131,11 +110,6 @@ public class SettingsActivity extends PreferenceActivity implements
 	
 	private void launchManualNetworkSettings() {
 		final Intent intent = new Intent(this,BikeNetworkActivity.class);
-		this.startActivity(intent);
-	}
-	
-	private void launchAccountSettings() {
-		final Intent intent = new Intent(this,AccountSettingsActivity.class);
 		this.startActivity(intent);
 	}
 

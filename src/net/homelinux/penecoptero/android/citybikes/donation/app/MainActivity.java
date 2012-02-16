@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package net.homelinux.penecoptero.android.citybikes.app;
+package net.homelinux.penecoptero.android.citybikes.donation.app;
 
 import java.util.Calendar;
 import java.util.List;
 
-import net.homelinux.penecoptero.android.citybikes.donation.app.BikeNetworkActivity;
-import net.homelinux.penecoptero.android.citybikes.donation.app.BookmarkManager;
-import net.homelinux.penecoptero.android.citybikes.donation.app.CityBikes;
-import net.homelinux.penecoptero.android.citybikes.donation.app.HomeOverlay;
-import net.homelinux.penecoptero.android.citybikes.donation.app.R;
-import net.homelinux.penecoptero.android.citybikes.donation.app.StationOverlay;
+import net.homelinux.penecoptero.android.citybikes.app.AccountActivity;
 import net.homelinux.penecoptero.android.citybikes.utils.CircleHelper;
 
 import org.json.JSONException;
@@ -68,8 +63,8 @@ public class MainActivity extends MapActivity {
 	public static final int MENU_ITEM_WHATEVER = Menu.FIRST + 2;
 	public static final int MENU_ITEM_LIST = Menu.FIRST + 3;
 	public static final int MENU_ITEM_SETTINGS = Menu.FIRST + 4;
-	public static final int MENU_ITEM_MY_ACCOUNT = Menu.FIRST + 5;
-	public static final int MENU_ITEM_HELP = Menu.FIRST + 6;
+	public static final int MENU_ITEM_HELP = Menu.FIRST + 5;
+	private static final int MENU_ITEM_MY_ACCOUNT = Menu.FIRST + 6;
 	public static final int KEY_LAT = 0;
 	public static final int KEY_LNG = 1;
 	public static final int SETTINGS_ACTIVITY = 0;
@@ -242,6 +237,7 @@ public class MainActivity extends MapActivity {
 								.inflateMessage(getString(R.string.no_bikes_around));
 					}
 					if (current != null) {
+						current.setSelected(true,getBike);
 						infoLayer.inflateStation(current);
 						if (view_all)
 							view_all();
@@ -532,7 +528,6 @@ public class MainActivity extends MapActivity {
 				toast.show();
 			}
 		}
-		infoLayer.update();
 	}
 	
 	public void changeMode(boolean getBike){

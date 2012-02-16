@@ -20,8 +20,7 @@
 	<com.google.android.maps.MapView
 		xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/mapview"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
-		android:padding="0px" android:clickable="true"
-		android:apiKey="0EDEERLcU75SuvjCO-47jKI-q0o4pEpEsrg69vQ">
+		android:padding="0px" android:clickable="true" android:apiKey="0EDEERLcU75SuvjCO-47jKI-q0o4pEpEsrg69vQ">
 	</com.google.android.maps.MapView>
 	<!-- release android:apiKey="0M6iRHXUjmWCRx5NQg_5tZH7ZtZkI1kaO-ZQZtA ">  -->
 	<!-- testing android:apiKey="0M6iRHXUjmWBHgd0HYv7WNqm70Wq1XPVLhH275A ">  -->
@@ -29,7 +28,7 @@
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:orientation="vertical" android:gravity="bottom">
-		<net.homelinux.penecoptero.android.citybikes.app.StationSlidingDrawer android:id="@+id/drawer"
+		<net.homelinux.penecoptero.android.citybikes.donation.app.StationSlidingDrawer android:id="@+id/drawer"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:handle="@+id/handle" android:content="@+id/content"
 			android:topOffset="0px" android:bottomOffset="0px">
@@ -45,17 +44,17 @@
 				android:id="@id/content" android:layout_width="fill_parent"
 				android:layout_height="wrap_content">
 			</FrameLayout>
-		</net.homelinux.penecoptero.android.citybikes.app.StationSlidingDrawer>
+		</net.homelinux.penecoptero.android.citybikes.donation.app.StationSlidingDrawer>
 		<LinearLayout android:layout_width="fill_parent"
 			android:orientation="vertical" android:layout_height="wrap_content"
 			android:layout_margin="0px">
-			<net.homelinux.penecoptero.android.citybikes.app.InfoLayer android:id="@+id/info_layer"
+			<net.homelinux.penecoptero.android.citybikes.donation.app.InfoLayer android:id="@+id/info_layer"
 				android:layout_margin="0px" android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:paddingTop="5dip"
 				android:paddingLeft="5dip" android:paddingBottom="5dip"
 				android:background="@drawable/fancy_gradient"
 				 android:paddingRight="5dip">
-			</net.homelinux.penecoptero.android.citybikes.app.InfoLayer>
+			</net.homelinux.penecoptero.android.citybikes.donation.app.InfoLayer>
 		</LinearLayout>
 	</LinearLayout>
 	<ToggleButton android:id="@+id/mode_button"

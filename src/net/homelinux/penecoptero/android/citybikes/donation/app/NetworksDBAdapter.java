@@ -1,9 +1,8 @@
-package net.homelinux.penecoptero.android.citybikes.app;
+package net.homelinux.penecoptero.android.citybikes.donation.app;
 
 import java.util.List;
 import java.util.Locale;
 
-import net.homelinux.penecoptero.android.citybikes.donation.app.CityBikes;
 import net.homelinux.penecoptero.android.citybikes.utils.CircleHelper;
 
 import org.json.JSONArray;
@@ -13,7 +12,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
-//import android.util.Log;
+import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 
